@@ -18,19 +18,24 @@ https://www.tinkercad.com/things/kvzXWspMo0g-stunning-snaget-duup/editel?shareco
  *    Testing: 
  *      steering angle, pitot tubes, strain gauges, accelerometer, gyroscope, thermocouple
  */
+// test a: 1ms digital loop + 1000ms analog loop with all float type
+//  test b: 1ms digital loop + 1000ms analog loop with all float type
+//  test c: 1ms digital loop + 1000ms analog loop with all unsigned long type
+//  test d: constant digital loop + 1000ms analog loop with all float type
+//  test e: constant digital loop + 1000ms analog loop with all unsigned long type
 
 #include "SD.h"
 #include"SPI.h"
 
 //GLOBALS
-const int CSpin = 10;
+const int CSpin = 53;
 String dataString =""; // holds the data to be written to the SD card
-String fileName = "data.csv";
+String fileName = "testA.csv";
 File sensorData;
-int digitalReading = 0;
+float digitalReading = 0;
 int lastDigReadTime = 0;
-int analogReading1 = 0;
-int analogReading2 = 0;
+float analogReading1 = 0;
+float analogReading2 = 0;
 unsigned long previousTimeDigital = millis();
 unsigned long previousTimeAnalog = millis();
 int diff = 0;
@@ -40,34 +45,35 @@ int diff = 0;
 // fake digital sensor
 void digitalSensor(){
   digitalReading = digitalReading + 1;
-  Serial.print("Digital Output:");
-  Serial.println(digitalReading);
+//  Serial.print("Digital Output:");
+//  Serial.println(digitalReading);
 }
 // fake analog sensors
 void analogSensor1(){
   analogReading1 = analogReading1 + 1;
-  Serial.print("Analog 1 Output:");
-  Serial.println(analogReading1);
+//  Serial.print("Analog 1 Output:");
+//  Serial.println(analogReading1);
 }
 void analogSensor2(){
-  analogReading2 = analogReading2 + 1;
-  Serial.print("Analog 2 Output:");
-  Serial.println(analogReading2);
+  analogReading2 = (analogReading2+1)*2;
+//  Serial.print("Analog 2 Output:");
+//  Serial.println(analogReading2);
 }
 
 
 // saves to sd card
 void saveData(){
-  if (SD.exists(fileName)) { // check the card is still there
-  // now append new data file
-    sensorData = SD.open(fileName, FILE_WRITE);
+  sensorData = SD.open(fileName, FILE_WRITE);
+//  if (SD.exists(fileName)) { // check the card is still there
+//  // now append new data file
     if (sensorData){
       sensorData.println(dataString);
       sensorData.close(); // close the file
+      Serial.println(dataString);
     }
-  } else {
-    Serial.println("Error writing to file !");
-  }
+//  } else {
+//    Serial.println("Error writing to file !");
+//  }
 }
 
 // pulls all analog values and compiles into CSV string
@@ -76,6 +82,7 @@ void compileCurData(){
   analogSensor2();
   // convert to CSV
   dataString = String(digitalReading) + "," + String(analogReading1) + "," + String(analogReading2);
+  
 }
 
 
@@ -92,6 +99,9 @@ void setup() {
   return;
   }
   Serial.println("card initialized.");
+  sensorData = SD.open(fileName, FILE_WRITE);
+  sensorData.println("Digital Reading, Analog Reading 1, Analog Reading 2");
+  sensorData.close();
 }
 
 
@@ -100,16 +110,19 @@ void loop() {
   // this is kinda ugly but i think it will do the job lul 
   
   // run checks for digital sensors every single loop, check for reading of 0
-  digitalSensor();
-  if ((digitalReading % 3) == 0){
-    diff = currentTime - lastDigReadTime;
+  if (currentTime < 10000){
+    
+  if (currentTime - previousTimeDigital > 1){
+    digitalSensor();
   }
+  
 
   // check for analog reading every second
   if (currentTime - previousTimeAnalog > 1000){
     previousTimeAnalog = currentTime;
     compileCurData();
     saveData();
+  }
   }
   
 }
