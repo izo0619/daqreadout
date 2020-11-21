@@ -161,10 +161,10 @@ void analogSensors(){
   //  allSensors[25] = accel;
   //  allSensors[26] = gyro;
   //  allSensors[27] = gps;
-  allSensors[28] = ads1115b.readADC_Differential_0_1();
-  allSensors[29] = ads1115b.readADC_Differential_2_3();
-  allSensors[30] = ads1115c.readADC_Differential_0_1();
-  allSensors[31] = ads1115c.readADC_Differential_2_3();
+  allSensors[28] = convertSensor(ads1115b.readADC_Differential_0_1());
+  allSensors[29] = convertSensor(ads1115b.readADC_Differential_2_3());
+  allSensors[30] = convertSensor(ads1115c.readADC_Differential_0_1());
+  allSensors[31] = convertSensor(ads1115c.readADC_Differential_2_3());
   allSensors[32] = convertSensor(analogRead(PTUBE1_PIN));
   allSensors[33] = convertSensor(analogRead(PTUBE2_PIN));
   allSensors[34] = convertSensor(analogRead(PTUBE3_PIN));
@@ -175,8 +175,8 @@ void analogSensors(){
   allSensors[39] = convertSensor(analogRead(PTUBE8_PIN));
   allSensors[40] = convertSensor(analogRead(PTUBE9_PIN));
   allSensors[41] = convertSensor(analogRead(PTUBE10_PIN));
-  allSensors[42] = ads1115a.readADC_SingleEnded(0);
-  allSensors[43] = ads1115a.readADC_SingleEnded(0);
+  allSensors[42] = convertSensor(ads1115a.readADC_SingleEnded(0));
+  allSensors[43] = convertSensor(ads1115a.readADC_SingleEnded(0));
 }
 // saves to sd card
 void saveData(){

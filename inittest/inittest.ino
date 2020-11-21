@@ -30,7 +30,7 @@ https://www.tinkercad.com/things/kvzXWspMo0g-stunning-snaget-duup/editel?shareco
 //GLOBALS
 const int CSpin = 53;
 String dataString =""; // holds the data to be written to the SD card
-String fileName = "testA.csv";
+String fileName = "testK.csv";
 File sensorData;
 float digitalReading = 0;
 int lastDigReadTime = 0;
@@ -39,25 +39,41 @@ float analogReading2 = 0;
 unsigned long previousTimeDigital = millis();
 unsigned long previousTimeAnalog = millis();
 int diff = 0;
+
+float allSensors[20]={digitalReading, 3, 2, 4, 3, 2, 7, 8, 9, 11, 12,3.1, 2.3, 4.5, 3.7, 2.8, 7.1, 8.9, 9.3, 11.11};
        
 //FUNCTIONS
 
 // fake digital sensor
 void digitalSensor(){
-  digitalReading = digitalReading + 1;
+  digitalReading = digitalReading + 1.0;
+  allSensors[0] = digitalReading;
 //  Serial.print("Digital Output:");
 //  Serial.println(digitalReading);
 }
-// fake analog sensors
-void analogSensor1(){
-  analogReading1 = analogReading1 + 1;
-//  Serial.print("Analog 1 Output:");
-//  Serial.println(analogReading1);
-}
-void analogSensor2(){
-  analogReading2 = (analogReading2+1)*2;
-//  Serial.print("Analog 2 Output:");
-//  Serial.println(analogReading2);
+//// fake analog sensors
+//void analogSensor1(){
+//  analogReading1 = analogReading1 + 1;
+////  Serial.print("Analog 1 Output:");
+////  Serial.println(analogReading1);
+//}
+//void analogSensor2(){
+//  analogReading2 = (analogReading2+1)*2;
+////  Serial.print("Analog 2 Output:");
+////  Serial.println(analogReading2);
+//}
+
+void analogSensors(){
+  for (int i = 1; i < sizeof(allSensors)/sizeof(float); i = i + 1) {
+    allSensors[i] = allSensors[i]+2;
+    for (int j = i+1; j < sizeof(allSensors)/sizeof(float); j = j + 1) {
+        allSensors[j] = (allSensors[i]*0.1) + allSensors[j];
+        for (int k = j+1; k < sizeof(allSensors)/sizeof(int); k = k + 1) {
+          allSensors[k] = allSensors[k]*0.9;
+        }
+    }
+//    Serial.println(allSensors[i]);
+  }
 }
 
 
@@ -78,10 +94,12 @@ void saveData(){
 
 // pulls all analog values and compiles into CSV string
 void compileCurData(){
-  analogSensor1();
-  analogSensor2();
+  analogSensors();
   // convert to CSV
-  dataString = String(digitalReading) + "," + String(analogReading1) + "," + String(analogReading2);
+  dataString = "";
+  for (int i = 0; i < sizeof(allSensors)/sizeof(float); i = i + 1) {
+    dataString = dataString + "," + String(allSensors[i]);
+  }
   
 }
 
@@ -100,8 +118,12 @@ void setup() {
   }
   Serial.println("card initialized.");
   sensorData = SD.open(fileName, FILE_WRITE);
-  sensorData.println("Digital Reading, Analog Reading 1, Analog Reading 2");
+//  sensorData.println("Digital Reading, Analog Reading 1, Analog Reading 2");
   sensorData.close();
+  for (int i = 0; i < sizeof(allSensors)/sizeof(float); i = i + 1) {
+    dataString = dataString + "," + String(allSensors[i]);
+  }
+  saveData(); 
 }
 
 
@@ -112,10 +134,7 @@ void loop() {
   // run checks for digital sensors every single loop, check for reading of 0
   if (currentTime < 10000){
     
-  if (currentTime - previousTimeDigital > 1){
-    digitalSensor();
-  }
-  
+  digitalSensor();
 
   // check for analog reading every second
   if (currentTime - previousTimeAnalog > 1000){
