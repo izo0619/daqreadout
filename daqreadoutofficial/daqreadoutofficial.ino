@@ -135,15 +135,15 @@ int convertSensor(int sensorValue){
 
 void analogSensors(){
   
-  allSensors[5] = convertSensor(analogRead(FL_BRK_TMP_PIN));
-  allSensors[6] = convertSensor(analogRead(FR_BRK_TMP_PIN));
+  allSensors[5] = (convertSensor(analogRead(FL_BRK_TMP_PIN)) - 0.50)/0.005;
+  allSensors[6] = (convertSensor(analogRead(FR_BRK_TMP_PIN)) - 0.50)/0.005;
   //  allSensors[7] = back l brake temp
   //  allSensors[8] = back r brake temp
   allSensors[9] = convertSensor(analogRead(FL_SUS_POT_PIN));
   allSensors[10] = convertSensor(analogRead(FR_SUS_POT_PIN));
   //  allSensors[11] = back l suspot
   //  allSensors[12] = back r suspot
-  allSensors[13] = convertSensor(analogRead(F_BRK_PRES_PIN));
+  allSensors[13] = (convertSensor(analogRead(F_BRK_PRES_PIN)) - 0.50)/ (4/7500);
   //  allSensors[14] = back brk pres
   allSensors[15] = convertSensor(analogRead(STEER_ANG_PIN));
   // motec
