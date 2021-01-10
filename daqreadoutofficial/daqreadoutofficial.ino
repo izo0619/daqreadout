@@ -32,7 +32,7 @@ Adafruit_ADS1115 ads1115c(0x4A);
 //GLOBALS
 const int CSpin = 10;
 String dataString =""; // holds the data to be written to the SD card
-String fileName = "data.csv";
+String fileName;
 File sensorData;
 
 
@@ -46,7 +46,7 @@ float allSensors[43];
 
 // SENSOR GLOBALS
 int sensorVoltage = 0;
-int systemVoltage = 0;
+int systemVoltage = 5;
 int resolution = 65535;
 
 // Wheel Speed
@@ -96,6 +96,8 @@ int PTUBE8_PIN = 84;
 int PTUBE9_PIN = 83;
 int PTUBE10_PIN = 82;
 float PTUBE1, PTUBE2, PTUBE3, PTUBE4, PTUBE5, PTUBE6, PTUBE7, PTUBE8, PTUBE9, PTUBE10, PTUBE11, PTUBE12;
+
+// OFFSETS
                 
 //FUNCTIONS
 
@@ -103,23 +105,23 @@ void digitalSensors(int diff){
   // wheel speed
   FL_VSS = digitalRead(FL_VSS_PIN);
   FR_VSS = digitalRead(FR_VSS_PIN);
-  if (FL_VSS = 0){
+  if (FL_VSS == 0){
       wheelSpeed = wheelCirc/diff;
       allSensors[1] = wheelSpeed;
       lastDigReadTime = currentTime;
   }
-  if (FR_VSS = 0){
+  if (FR_VSS == 0){
       wheelSpeed = wheelCirc/diff;
       allSensors[2] = wheelSpeed;
       lastDigReadTime = currentTime;
   }
   // REPEAT WITH BACK WHEEL SPEEDS FROM MOTEC
-  if (BL_VSS = 0){
+  if (BL_VSS == 0){
       wheelSpeed = wheelCirc/diff;
       allSensors[3] = wheelSpeed;
       lastDigReadTime = currentTime;
   }
-  if (BR_VSS = 0){
+  if (BR_VSS == 0){
       wheelSpeed = wheelCirc/diff;
       allSensors[4] = wheelSpeed;
       lastDigReadTime = currentTime;
@@ -219,6 +221,21 @@ void setup() {
 
   pinMode(FL_VSS_PIN, INPUT);
   pinMode(FR_VSS_PIN, INPUT);
+
+  //   get current version for file name and then update version
+  int dataVer;
+  File sensorDataVer = SD.open("VerTrack.txt");
+  if (sensorDataVer) {
+        dataVer = sensorDataVer.read();
+  } else {
+    Serial.println("file unavailable");
+  }
+  sensorDataVer.close();
+  sensorDataVer = SD.open("VerTrack.txt", O_RDWR);
+  sensorDataVer.write(dataVer+1);
+  sensorDataVer.close();
+  fileName = "data" + String(dataVer);
+
 }
 
 
@@ -238,10 +255,10 @@ void loop() {
 //    }
 //  }
   
-  // run checks for digital sensors every single loop, check for reading of 0
+//  run checks for digital sensors every single loop, check for reading of 0
   digitalSensors(currentTime - lastDigReadTime);
 
-  // check for analog reading every second
+//  check for analog reading every second
   if (currentTime - previousTimeAnalog > 1000){
     previousTimeAnalog = currentTime;
     compileCurData();
