@@ -8,11 +8,13 @@ void saveData(){
       sensorData.println(dataString);
       sensorData.close(); // close the file
     }
-    digitalWrite(led_r, LOW);
-    digitalWrite(led_g, HIGH);
+    digitalWrite(led_r, HIGH);
+    digitalWrite(led_y, HIGH);
+    digitalWrite(led_g, LOW);
   } else {
     Serial.println("Error writing to file !");
-    digitalWrite(led_r, HIGH);
+    digitalWrite(led_r, LOW);
+    digitalWrite(led_y, LOW);
     digitalWrite(led_g, HIGH);
   }
 }

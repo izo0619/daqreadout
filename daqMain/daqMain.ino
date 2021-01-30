@@ -31,7 +31,7 @@ File sensorData;
 // leds for detecting sd card
 int led_r = 39;
 int led_g = 40;
-int led_b = 41;
+int led_y = 41;
 
 unsigned long previousTimeDigital = millis();
 unsigned long previousTimeAnalog = millis();
@@ -117,12 +117,14 @@ void setup() {
   // declare led pins as outputs
   pinMode(led_r, OUTPUT);
   pinMode(led_g, OUTPUT);
-  pinMode(led_b, OUTPUT);
+  pinMode(led_y, OUTPUT);
   
   // see if the card is present and can be initialized
   if (!SD.begin(CSpin)) {
   Serial.println("Card failed/not found");
-  digitalWrite(led_r, HIGH);
+  digitalWrite(led_r, LOW);
+  digitalWrite(led_y, HIGH);
+  digitalWrite(led_g, HIGH);
   // stop
   return;
   }
@@ -138,7 +140,8 @@ void setup() {
         dataVer = sensorDataVer.read();
   } else {
     Serial.println("File unavailable");
-    digitalWrite(led_r, HIGH);
+    digitalWrite(led_r, LOW);
+    digitalWrite(led_y, LOW);
     digitalWrite(led_g, HIGH);
     delay(2000);
   }
@@ -157,7 +160,8 @@ void setup() {
     }
   } else {
     Serial.println("Error writing to file !");
-    digitalWrite(led_r, HIGH);
+    digitalWrite(led_r, LOW);
+    digitalWrite(led_y, LOW);
     digitalWrite(led_g, HIGH);
     delay(2000);
   }
@@ -176,7 +180,9 @@ void setup() {
   STRAIN3_CLB = convertSensor(ads1115c.readADC_Differential_0_1());
   STRAIN4_CLB = convertSensor(ads1115c.readADC_Differential_2_3());
   PTUBE_CLB = convertSensor(analogRead(PTUBE1_PIN));
-
+  digitalWrite(led_r, HIGH);
+  digitalWrite(led_y, HIGH);
+  digitalWrite(led_g, LOW);
 }
 
 
