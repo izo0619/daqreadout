@@ -18,6 +18,9 @@
 #include"SPI.h"
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
+#include <SoftwareSerial.h>
+
+SoftwareSerial xbee(0,1);
 
 Adafruit_ADS1115 ads1115a(0x48);
 Adafruit_ADS1115 ads1115b(0x49);
@@ -111,6 +114,7 @@ void setup() {
   // Open serial communications
   Serial.begin(9600);
   Serial.print("Initializing SD card...");
+  xbee.begin(9600);
   pinMode(CSpin, OUTPUT);
   //
   
@@ -196,6 +200,7 @@ void loop() {
     previousTimeAnalog = currentTime;
     compileCurData();
     saveData();
+    // for now write to xbee every second, may shorten interval
+    writeXbee();
   }
-  
 }

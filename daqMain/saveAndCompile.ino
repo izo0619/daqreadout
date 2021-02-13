@@ -1,4 +1,3 @@
-
 // saves to sd card
 void saveData(){
   if (SD.exists(fileName)) { // check the card is still there
