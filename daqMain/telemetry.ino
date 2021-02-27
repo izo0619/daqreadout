@@ -13,9 +13,9 @@ void writeXbee(){
   // assumes the first 36 elements matches the python side of sensors
   for (int i= 0; i < len; i++){
     // does not round yet
-    shortSenData[i] = short(allSensors[i] * pow(10,sigList[i])); // may not need to use a list
-    xbee.write(highByte(shortSenData[i]));
-    xbee.write(lowByte(shortSenData[i]));
+    shortSensorData[i] = short(allSensors[i] * pow(10,sensorSig[i])); // may not need to use a list
+    xbee.write(highByte(shortSensorData[i]));
+    xbee.write(lowByte(shortSensorData[i]));
   }
   xbee.write(highByte(id));
   xbee.write(lowByte(id));
