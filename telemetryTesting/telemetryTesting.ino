@@ -10,7 +10,7 @@
 //#include"SPI.h"
 //#include <Wire.h>
 //#include <Adafruit_ADS1015.h>
-//#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 
 SoftwareSerial xbee(0,1);
 
@@ -23,9 +23,10 @@ SoftwareSerial xbee(0,1);
 unsigned long previousTimeDigital = millis();
 unsigned long previousTimeAnalog = millis();
 unsigned long currentTime;
+const int sensorsLen = 3;
 
 // SENSOR ARRAYS
-float allSensors[3];
+float allSensors[sensorsLen];
 
 // SENSOR GLOBALS
 int sensorVoltage = 0;
@@ -66,7 +67,6 @@ void setup() {
 
 void loop() {
   currentTime = millis();
-  
 //  run checks for digital sensors every single loop, check for reading of 0
 //  digitalSensors();
 //  check for analog reading every second
@@ -75,6 +75,7 @@ void loop() {
 //    compileCurData();
 //    saveData();
     // for now write to xbee every second, may shorten interval
+    analogSensors();
     writeXbee();
   }
 }
