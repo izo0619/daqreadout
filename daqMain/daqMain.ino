@@ -47,7 +47,7 @@ float allSensors[43];
 // SENSOR GLOBALS
 int sensorVoltage = 0;
 int systemVoltage = 5;
-int resolution = 65535;
+int resolution = 1024;
 
 // Wheel Speed
 int wheelCirc = 0;
@@ -102,10 +102,10 @@ float PTUBE1, PTUBE2, PTUBE3, PTUBE4, PTUBE5, PTUBE6, PTUBE7, PTUBE8, PTUBE9, PT
 float PTUBE_CLB, STRAIN1_CLB, STRAIN2_CLB, STRAIN3_CLB, STRAIN4_CLB, STEER_ANG_CLB, TPS_CLB, F_BRK_PRES_CLB, B_BRK_PRES_CLB, FL_SUS_POT_CLB, FR_SUS_POT_CLB, BL_SUS_POT_CLB, BR_SUS_POT_CLB;
                 
 
-int convertSensor(int sensorValue, int calibration=0);
+float convertSensor(int sensorValue, int calibration=0);
 // sensor value from 0 to 2^16 and returns a voltage between 0 and 5 V
-int convertSensor(int sensorValue, int calibration=0){
-  sensorVoltage = (sensorValue * (systemVoltage/resolution)) - calibration;
+float convertSensor(int sensorValue, int calibration=0){
+  float sensorVoltage = (sensorValue * ((float)systemVoltage/resolution)) - calibration;
   return sensorVoltage;
 }
 
