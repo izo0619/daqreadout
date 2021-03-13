@@ -31,11 +31,11 @@ float allSensors[sensorsLen];
 // SENSOR GLOBALS
 int sensorVoltage = 0;
 int systemVoltage = 5;
-int resolution = 65535;
+int resolution = 1024;
 
 // Brake Temperature
 int FL_BRK_TMP_PIN = 97;
-int FR_BRK_TMP_PIN = 96;
+int FR_BRK_TMP_PIN = A1;
 float FL_BRK_TMP, FR_BRK_TMP;
 
 // Brake Pressure
@@ -46,10 +46,10 @@ float F_BRK_PRES = 0;
 float F_BRK_PRES_CLB;
                 
 
-int convertSensor(int sensorValue, int calibration=0);
+float convertSensor(int sensorValue, int calibration=0);
 // sensor value from 0 to 2^16 and returns a voltage between 0 and 5 V
-int convertSensor(int sensorValue, int calibration=0){
-  sensorVoltage = (sensorValue * (systemVoltage/resolution)) - calibration;
+float convertSensor(int sensorValue, int calibration=0){
+  float sensorVoltage = (sensorValue * ((float)systemVoltage/resolution)) - calibration;
   return sensorVoltage;
 }
 
@@ -59,7 +59,7 @@ void setup() {
   Serial.begin(9600);
   //  Serial.print("Initializing SD card...");
   xbee.begin(9600);
-
+  pinMode(FR_BRK_TMP_PIN, INPUT);
   F_BRK_PRES_CLB = convertSensor(analogRead(F_BRK_PRES_PIN));
 
 }
@@ -76,6 +76,7 @@ void loop() {
 //    saveData();
     // for now write to xbee every second, may shorten interval
     analogSensors();
+    Serial.println(analogRead(A1));
     writeXbee();
   }
 }
