@@ -1,4 +1,3 @@
-
 /* DAQ MAIN CODE
  *  subroutines: analogSensors, digitalSensors, saveAndCompile
  */
@@ -153,15 +152,13 @@ void setup() {
   sensorDataVer = SD.open("VerTrack.txt", O_RDWR);
   sensorDataVer.write(dataVer+1);
   sensorDataVer.close();
-  fileName = "data" + String(dataVer);
+  fileName = "data" + String(dataVer) + ".csv";
 
   // write headers
-  if (SD.exists(fileName)) { // check the card is still there
-    sensorData = SD.open(fileName, FILE_WRITE);
-    if (sensorData){
+  sensorData = SD.open(fileName, FILE_WRITE);
+  if (sensorData){
       sensorData.println("FL_VSS,FR_VSS,BL_VSS,BR_VSS,FL_BRK_TMP,FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP,FL_SUS_POT,FR_SUS_POT,BL_SUS_POT,BR_SUS_POT,F_BRK_PRES,B_BRK_PRES,STEER_ANG,TPS,OIL_PRES,OIL_TEMP,COOL_TEMP,MAP,MAT,NEUT,LAMBDA1,LAMBDA2,ACCEL,GYRO,GPS,STRAIN1,STRAIN2,STRAIN3,STRAIN4,PTUBE1,PTUBE2,PTUBE3,PTUBE4,PTUBE5,PTUBE6,PTUBE7,PTUBE8,PTUBE9,PTUBE10,PTUBE11,PTUBE12");
       sensorData.close(); // close the file
-    }
   } else {
     Serial.println("Error writing to file !");
     digitalWrite(led_r, LOW);
