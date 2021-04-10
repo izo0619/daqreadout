@@ -5,7 +5,7 @@ void digitalSensors(){
   if (FL_VSS == 0){
       diff = currentTime - FL_VSS_LastRead;
       wheelSpeed = wheelCirc/diff;
-      allSensors[1] = wheelSpeed;
+      allSensors[0] = wheelSpeed;
       FL_VSS_LastRead = currentTime;
   }
   if (FR_VSS == 0){
