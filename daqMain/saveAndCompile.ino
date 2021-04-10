@@ -23,7 +23,7 @@ void compileCurData(){
   analogSensors();
   // convert to CSV
   dataString = "";
-  for (int i = 0; i < sizeof(allSensors)/sizeof(int); i = i + 1) {
-    dataString = String(allSensors[i]) + " ,";
-  } 
+  for (int i = 0; i < sizeof(allSensors)/sizeof(float); i++) {
+    dataString = dataString + String(allSensors[i]) + ",";
+  }
 }
