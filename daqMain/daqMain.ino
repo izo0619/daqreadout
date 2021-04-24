@@ -1,3 +1,5 @@
+
+
 /* DAQ MAIN CODE
  *  subroutines: analogSensors, digitalSensors, saveAndCompile
  */
@@ -18,6 +20,13 @@
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
 #include <SoftwareSerial.h>
+#include <can.h>
+#include <global.h>
+#include <Canbus.h>
+#include <mcp2515_defs.h>
+#include <mcp2515.h>
+#include <defaults.h>
+
 
 SoftwareSerial xbee(0,1);
 
@@ -114,6 +123,7 @@ void setup() {
   Serial.begin(9600);
   Serial.print("Initializing SD card...");
   xbee.begin(9600);
+  can_setup();
   pinMode(CSpin, OUTPUT);
   //
   

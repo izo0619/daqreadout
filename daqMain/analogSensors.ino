@@ -2,25 +2,25 @@ void analogSensors(){
   
   allSensors[4] = (convertSensor(analogRead(FL_BRK_TMP_PIN)) - 0.50)/0.005;
   allSensors[5] = (convertSensor(analogRead(FR_BRK_TMP_PIN)) - 0.50)/0.005;
-  //  allSensors[6] = back l brake temp
-  //  allSensors[7] = back r brake temp
+  allSensors[6] = can_read(4); // back l brake temp
+  allSensors[7] = can_read(5); // back r brake temp
   allSensors[8] = convertSensor(analogRead(FL_SUS_POT_PIN), FL_SUS_POT_CLB);
   allSensors[9] = convertSensor(analogRead(FR_SUS_POT_PIN), FR_SUS_POT_CLB);
   //  allSensors[10] = back l suspot
   //  allSensors[11] = back r suspot
   allSensors[12] = (convertSensor(analogRead(F_BRK_PRES_PIN), F_BRK_PRES_CLB) - 0.50)/ (4/7500);
-  //  allSensors[13] = back brk pres
+  allSensors[13] = can_read(1); // back brk pres
   allSensors[14] = convertSensor(analogRead(STEER_ANG_PIN), STEER_ANG_CLB);
   // motec
-  //  allSensors[15] = TPS
-  //  allSensors[16] = OIL_PRES
-  //  allSensors[17] = OIL_TEMP
-  //  allSensors[18] = COOL_TEMP
-  //  allSensors[19] = MAP
-  //  allSensors[20] = MAT
-  //  allSensors[21] = NEUT
-  //  allSensors[22] = LAMBDA1
-  //  allSensors[23] = LAMBDA2
+  allSensors[15] = can_read(31); // TPS
+  allSensors[16] = can_read(20); // OIL_PRES
+  allSensors[17] = can_read(21); // OIL_TEMP
+  allSensors[18] = can_read(53); // COOL_TEMP
+  allSensors[19] = can_read(51); // MAP
+  allSensors[20] = can_read(52); // MAT
+  allSensors[21] = can_read(30); // NEUT
+  allSensors[22] = can_read(40); // LAMBDA1
+  allSensors[23] = can_read(41); // LAMBDA2
 
   // i2c
   //  allSensors[24] = accel;
