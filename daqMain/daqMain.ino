@@ -58,7 +58,7 @@ int systemVoltage = 5;
 int resolution = 1024;
 
 // Wheel Speed
-int wheelCirc = 0;
+int wheelCirc = 3.24*2*8;
 int wheelSpeed = 0;
 int FL_VSS_PIN = 2;
 int FR_VSS_PIN = 3;
