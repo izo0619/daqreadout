@@ -1,17 +1,15 @@
-
-
 /* DAQ MAIN CODE
  *  subroutines: analogSensors, digitalSensors, saveAndCompile
  */
 /* TODO
  *  pull data from I2C bus
- *  pull data from MOTEC/CAN 
+ *  pull data from MOTEC/CAN
  *  write functions for manipulating data:
  *    Non testing:
  *      lambdas, wheel speed (DIG) , brake temp, shock potent, brake pressure, throttle pos
  *      intake manifold ap, intake manifold at, oil pressure, cam angle (DIG)
  *      coolant temp, oil temp, crank angle
- *    Testing: 
+ *    Testing:
  *      steering angle, pitot tubes, strain gauges, accelerometer, gyroscope, thermocouple
  */
 
@@ -108,7 +106,7 @@ float PTUBE1, PTUBE2, PTUBE3, PTUBE4, PTUBE5, PTUBE6, PTUBE7, PTUBE8, PTUBE9, PT
 
 // OFFSETS
 float PTUBE_CLB, STRAIN1_CLB, STRAIN2_CLB, STRAIN3_CLB, STRAIN4_CLB, STEER_ANG_CLB, TPS_CLB, F_BRK_PRES_CLB, B_BRK_PRES_CLB, FL_SUS_POT_CLB, FR_SUS_POT_CLB, BL_SUS_POT_CLB, BR_SUS_POT_CLB;
-                
+
 
 float convertSensor(int sensorValue, int calibration=0);
 // sensor value from 0 to 2^16 and returns a voltage between 0 and 5 V
@@ -120,18 +118,18 @@ float convertSensor(int sensorValue, int calibration=0){
 
 void setup() {
   // Open serial communications
-  Serial.begin(9600);
-  Serial.print("Initializing SD card...");
+  //Serial.begin(9600);
+  //Serial.print("Initializing SD card...");
   xbee.begin(9600);
   can_setup();
   pinMode(CSpin, OUTPUT);
   //
-  
+
   // declare led pins as outputs
   pinMode(led_r, OUTPUT);
   pinMode(led_g, OUTPUT);
   pinMode(led_y, OUTPUT);
-  
+
   // see if the card is present and can be initialized
   if (!SD.begin(CSpin)) {
   Serial.println("Card failed/not found");
@@ -141,7 +139,7 @@ void setup() {
   // stop
   return;
   }
-  Serial.println("card initialized.");
+  //Serial.println("card initialized.");
 
   pinMode(FL_VSS_PIN, INPUT);
   pinMode(FR_VSS_PIN, INPUT);
@@ -162,13 +160,15 @@ void setup() {
   sensorDataVer = SD.open("VerTrack.txt", O_RDWR);
   sensorDataVer.write(dataVer+1);
   sensorDataVer.close();
-  fileName = "data" + String(dataVer) + ".csv";
+  fileName = "data" + String(dataVer);
 
   // write headers
-  sensorData = SD.open(fileName, FILE_WRITE);
-  if (sensorData){
+  if (SD.exists(fileName)) { // check the card is still there
+    sensorData = SD.open(fileName, FILE_WRITE);
+    if (sensorData){
       sensorData.println("FL_VSS,FR_VSS,BL_VSS,BR_VSS,FL_BRK_TMP,FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP,FL_SUS_POT,FR_SUS_POT,BL_SUS_POT,BR_SUS_POT,F_BRK_PRES,B_BRK_PRES,STEER_ANG,TPS,OIL_PRES,OIL_TEMP,COOL_TEMP,MAP,MAT,NEUT,LAMBDA1,LAMBDA2,ACCEL,GYRO,GPS,STRAIN1,STRAIN2,STRAIN3,STRAIN4,PTUBE1,PTUBE2,PTUBE3,PTUBE4,PTUBE5,PTUBE6,PTUBE7,PTUBE8,PTUBE9,PTUBE10,PTUBE11,PTUBE12");
       sensorData.close(); // close the file
+    }
   } else {
     Serial.println("Error writing to file !");
     digitalWrite(led_r, LOW);
@@ -199,10 +199,11 @@ void setup() {
 
 void loop() {
   currentTime = millis();
-  
+
 //  run checks for digital sensors every single loop, check for reading of 0
   digitalSensors();
 //  check for analog reading every second
+//  frequency of change of data
   if (currentTime - previousTimeAnalog > 1000){
     previousTimeAnalog = currentTime;
     compileCurData();
