@@ -1,12 +1,12 @@
 // writes sensor values to xbee
 void writeXbee(){
   // excluding strain gauges and pitot tubes
-  const int len = 26;
+  const int len = 27;
   // significant digits of each sensor values, temporary
-  int sensorSig[len] = {0, 0, 1, 2, 0, 0, 1, 2,
-                        1, 1, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 3, 3, 3, 2, 1,
-                        0, 0}; 
+  int sensorSig[len] = {1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1}; 
   short shortSensorData[len];
   short id = -32767;
 

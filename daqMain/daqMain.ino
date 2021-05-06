@@ -1,3 +1,4 @@
+
 /* DAQ MAIN CODE
  *  subroutines: analogSensors, digitalSensors, saveAndCompile
  */
@@ -111,8 +112,8 @@ float convertSensor(int sensorValue, int calibration=0){
 
 void setup() {
   // Open serial communications
-  Serial.begin(9600);
-  Serial.print("Initializing SD card...");
+  //Serial.begin(9600);
+  //Serial.print("Initializing SD card...");
   xbee.begin(9600);
   pinMode(CSpin, OUTPUT);
   //
@@ -131,7 +132,7 @@ void setup() {
   // stop
   return;
   }
-  Serial.println("card initialized.");
+  //Serial.println("card initialized.");
 
   pinMode(FL_VSS_PIN, INPUT);
   pinMode(FR_VSS_PIN, INPUT);
@@ -152,13 +153,15 @@ void setup() {
   sensorDataVer = SD.open("VerTrack.txt", O_RDWR);
   sensorDataVer.write(dataVer+1);
   sensorDataVer.close();
-  fileName = "data" + String(dataVer) + ".csv";
+  fileName = "data" + String(dataVer);
 
   // write headers
-  sensorData = SD.open(fileName, FILE_WRITE);
-  if (sensorData){
+  if (SD.exists(fileName)) { // check the card is still there
+    sensorData = SD.open(fileName, FILE_WRITE);
+    if (sensorData){
       sensorData.println("FL_VSS,FR_VSS,BL_VSS,BR_VSS,FL_BRK_TMP,FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP,FL_SUS_POT,FR_SUS_POT,BL_SUS_POT,BR_SUS_POT,F_BRK_PRES,B_BRK_PRES,STEER_ANG,TPS,OIL_PRES,OIL_TEMP,COOL_TEMP,MAP,MAT,NEUT,LAMBDA1,LAMBDA2,ACCEL,GYRO,GPS,STRAIN1,STRAIN2,STRAIN3,STRAIN4,PTUBE1,PTUBE2,PTUBE3,PTUBE4,PTUBE5,PTUBE6,PTUBE7,PTUBE8,PTUBE9,PTUBE10,PTUBE11,PTUBE12");
       sensorData.close(); // close the file
+    }
   } else {
     Serial.println("Error writing to file !");
     digitalWrite(led_r, LOW);
@@ -193,6 +196,7 @@ void loop() {
 //  run checks for digital sensors every single loop, check for reading of 0
   digitalSensors();
 //  check for analog reading every second
+//  frequency of change of data
   if (currentTime - previousTimeAnalog > 1000){
     previousTimeAnalog = currentTime;
     compileCurData();
