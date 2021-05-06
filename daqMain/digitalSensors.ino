@@ -2,6 +2,8 @@ void digitalSensors(){
   // wheel speed
   FL_VSS = digitalRead(FL_VSS_PIN);
   FR_VSS = digitalRead(FR_VSS_PIN);
+  BL_VSS = can_read(12);
+  BR_VSS = can_read(13);
   if (FL_VSS == 0){
       diff = currentTime - FL_VSS_LastRead;
       wheelSpeed = wheelCirc/diff;
