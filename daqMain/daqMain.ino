@@ -25,6 +25,13 @@
 #include <mcp2515.h>
 #include <defaults.h>
 
+//#define TEST_MODE
+#ifdef TEST_MODE
+    #define Sprintln(a) (Serial.println(a))
+#else
+   #define Sprintln(a)
+#endif
+
 
 SoftwareSerial xbee(0,1);
 
@@ -120,7 +127,7 @@ float convertSensor(int sensorValue, int calibration=0){
 void setup() {
   // Open serial communications
   //Serial.begin(9600);
-  //Serial.print("Initializing SD card...");
+  Sprintln("Initializing SD card...");
   xbee.begin(9600);
   can_setup();
   pinMode(CSpin, OUTPUT);
@@ -133,14 +140,14 @@ void setup() {
 
   // see if the card is present and can be initialized
   if (!SD.begin(CSpin)) {
-//  Serial.println("Card failed/not found");
+  Sprintln("Card failed/not found");
   digitalWrite(led_r, LOW);
   digitalWrite(led_y, HIGH);
   digitalWrite(led_g, HIGH);
   // stop
   return;
   }
-  //Serial.println("card initialized.");
+  Sprintln("card initialized.");
 
   pinMode(FL_VSS_PIN, INPUT);
   pinMode(FR_VSS_PIN, INPUT);
@@ -151,7 +158,7 @@ void setup() {
   if (sensorDataVer) {
         dataVer = sensorDataVer.read();
   } else {
-    // Serial.println("File unavailable");
+     Sprintln("File unavailable");
     digitalWrite(led_r, LOW);
     digitalWrite(led_y, LOW);
     digitalWrite(led_g, HIGH);
@@ -169,7 +176,7 @@ void setup() {
       sensorData.println("FL_VSS,FR_VSS,BL_VSS,BR_VSS,FL_BRK_TMP,FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP,FL_SUS_POT,FR_SUS_POT,BL_SUS_POT,BR_SUS_POT,F_BRK_PRES,B_BRK_PRES,STEER_ANG,TPS,OIL_PRES,OIL_TEMP,COOL_TEMP,MAP,MAT,NEUT,LAMBDA1,LAMBDA2,ACCEL,GYRO,GPS,STRAIN1,STRAIN2,STRAIN3,STRAIN4,PTUBE1,PTUBE2,PTUBE3,PTUBE4,PTUBE5,PTUBE6,PTUBE7,PTUBE8,PTUBE9,PTUBE10,PTUBE11,PTUBE12");
       sensorData.close(); // close the file
     } else {
-    // Serial.println("Error writing to file !");
+    Sprintln("Error writing to file !");
     digitalWrite(led_r, LOW);
     digitalWrite(led_y, LOW);
     digitalWrite(led_g, HIGH);
