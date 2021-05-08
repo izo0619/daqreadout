@@ -1,4 +1,8 @@
 void digitalSensors(){
+  digitalWrite(24, HIGH); // g off
+  digitalWrite(25, LOW); //y on
+  digitalWrite(26, HIGH); //r off
+
   // wheel speed
   FL_VSS = digitalRead(FL_VSS_PIN);
   FR_VSS = digitalRead(FR_VSS_PIN);
