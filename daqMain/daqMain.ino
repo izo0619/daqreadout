@@ -15,6 +15,8 @@
  *      steering angle, pitot tubes, strain gauges, accelerometer, gyroscope, thermocouple
  */
 
+/*Tom's test comment*/
+
 #include "SD.h"
 #include"SPI.h"
 #include <Wire.h>
