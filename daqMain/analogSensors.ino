@@ -1,4 +1,7 @@
 void analogSensors(){
+
+  digitalWrite(27, LOW); // y on
+  digitalWrite(28, HIGH); //g off
   
   allSensors[4] = (convertSensor(analogRead(FL_BRK_TMP_PIN)) - 0.50)/0.005;
   allSensors[5] = (convertSensor(analogRead(FR_BRK_TMP_PIN)) - 0.50)/0.005;
