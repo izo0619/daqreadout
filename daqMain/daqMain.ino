@@ -39,7 +39,7 @@ Adafruit_ADS1115 ads1115a(0x48);
 Adafruit_ADS1115 ads1115b(0x49);
 Adafruit_ADS1115 ads1115c(0x4A);
 //GLOBALS
-const int CSpin = 10;
+const int CSpin = 49;
 String dataString =""; // holds the data to be written to the SD card
 String fileName;
 File sensorData;
