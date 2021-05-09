@@ -122,7 +122,21 @@ float convertSensor(int sensorValue, int calibration=0){
   float sensorVoltage = (sensorValue * ((float)systemVoltage/resolution)) - calibration;
   return sensorVoltage;
 }
+float digitalReading = 0;
 
+float fakeAllSensors[3]={digitalReading, 2, 100};
+
+
+void fakeDigitalSensors(){
+  digitalReading = digitalReading + 1.0;
+  fakeAllSensors[0] = digitalReading;
+}
+
+void fakeAnalogSensors(){
+  for (int i = 1; i < sizeof(fakeAllSensors)/sizeof(float); i = i + 1) {
+    fakeAllSensors[i] = fakeAllSensors[i]+2;
+    }
+  };
 
 void setup() {
   // Open serial communications
@@ -207,7 +221,7 @@ void loop() {
   currentTime = millis();
 
 //  run checks for digital sensors every single loop, check for reading of 0
-  digitalSensors();
+  fakeDigitalSensors();
 //  check for analog reading every second
 //  frequency of change of data
   if (currentTime - previousTimeAnalog > readFrequency){

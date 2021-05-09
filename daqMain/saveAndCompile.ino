@@ -20,7 +20,7 @@ void saveData(){
 
 // pulls all analog values and compiles into CSV string
 void compileCurData(){
-  analogSensors();
+  fakeAnalogSensors();
   // convert to CSV
   dataString = "";
   for (int i = 0; i < sizeof(allSensors)/sizeof(float); i++) {
