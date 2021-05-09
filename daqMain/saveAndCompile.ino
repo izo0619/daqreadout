@@ -20,9 +20,9 @@ void saveData(){
 
 // pulls all analog values and compiles into CSV string
 void compileCurData(){
-  digitalWrite(27, HIGH); // y off
-  digitalWrite(28, LOW); //g on
-  analogSensors();
+
+  fakeAnalogSensors();
+
   // convert to CSV
   dataString = "";
   for (int i = 0; i < sizeof(allSensors)/sizeof(float); i++) {
