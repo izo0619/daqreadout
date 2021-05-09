@@ -25,10 +25,11 @@ void analogSensors(){
   allSensors[22] = can_read(40); // LAMBDA1
   allSensors[23] = can_read(41); // LAMBDA2
 
-  // i2c
-  //  allSensors[24] = accel;
-  //  allSensors[25] = gyro;
-  //  allSensors[26] = gps;
+  // imu
+  IMU.readSensor();
+  allSensors[24] = IMU.getAccelX_mss();
+  allSensors[25] = IMU.getAccelY_mss();
+  allSensors[26] = IMU.getAccelZ_mss();
 
   // strain gauges
   allSensors[27] = convertSensor(ads1115b.readADC_Differential_0_1(), STRAIN1_CLB);
@@ -48,4 +49,11 @@ void analogSensors(){
   allSensors[40] = convertSensor(analogRead(PTUBE10_PIN), PTUBE_CLB);
   allSensors[41] = convertSensor(ads1115a.readADC_SingleEnded(0));
   allSensors[42] = convertSensor(ads1115a.readADC_SingleEnded(0));
+  allSensors[43] = IMU.getGyroX_rads();
+  allSensors[44] = IMU.getGyroY_rads();
+  allSensors[45] = IMU.getGyroZ_rads();
+  allSensors[46] = IMU.getMagX_uT();
+  allSensors[47] = IMU.getMagY_uT();
+  allSensors[48] = IMU.getMagZ_uT();
+  allSensors[49] = IMU.getTemperature_C();
 }

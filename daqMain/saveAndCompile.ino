@@ -7,14 +7,14 @@ void saveData(){
       sensorData.println(dataString);
       sensorData.close(); // close the file
     }
-    digitalWrite(led_r, HIGH);
-    digitalWrite(led_y, HIGH);
-    digitalWrite(led_g, LOW);
+    digitalWrite(spare1_r, HIGH);
+    digitalWrite(spare1_y, HIGH);
+    digitalWrite(spare1_g, LOW);
   } else {
     Serial.println("Error writing to file !");
-    digitalWrite(led_r, LOW);
-    digitalWrite(led_y, LOW);
-    digitalWrite(led_g, HIGH);
+    digitalWrite(spare1_r, LOW);
+    digitalWrite(spare1_y, LOW);
+    digitalWrite(spare1_g, HIGH);
   }
 }
 
