@@ -1,3 +1,5 @@
+#include <can.h>
+
 /* DAQ MAIN CODE
  *  subroutines: analogSensors, digitalSensors, saveAndCompile
  */
@@ -13,6 +15,8 @@
  *      steering angle, pitot tubes, strain gauges, accelerometer, gyroscope, thermocouple
  */
 
+/*Tom's test comment*/
+
 #include "SD.h"
 #include"SPI.h"
 #include <Wire.h>
@@ -25,13 +29,32 @@
 #include <mcp2515.h>
 #include <defaults.h>
 
-//#define TEST_MODE
-#ifdef TEST_MODE
-    #define Sprintln(a) (Serial.println(a))
-#else
-   #define Sprintln(a)
-#endif
+/*
+led behavior
 
+setup:
+dash led - (4,5,6) - r on
+breaktemp led - y on (14,15)
+shockpot led - g on (16, 17, 18)
+intake pressure led - g on (24, 25, 26)
+intake temperature led - y on (27, 28)
+coolant temp led - r on (30,31,32)
+
+after can_setup: r on - dash led
+
+after compileCurData = r on (breaktemp led)
+after saveData = g on
+after writeXbee - y on
+
+before analog sensors - intake pressure green
+enters analog sensors - intake pressure yellow
+
+enters digital sensors - intake temperature yellow
+
+telemetry
+enters writeXbee - green on (coolant temp led)
+after xbee.write for short sensor data - yellow on (cooland temp led)
+*/
 
 SoftwareSerial xbee(0,1);
 
@@ -44,6 +67,11 @@ String dataString =""; // holds the data to be written to the SD card
 String fileName;
 File sensorData;
 int readFrequency = 1000; // CHANGE THIS TO READ FASTER/SLOWER (units in ms)
+
+//Debug and testing
+bool enableSerialMessages = false;
+
+
 
 // leds for detecting sd card
 int led_r = 39;
@@ -140,10 +168,67 @@ void fakeAnalogSensors(){
 
 void setup() {
   // Open serial communications
-  //Serial.begin(9600);
-  Sprintln("Initializing SD card...");
-  xbee.begin(9600);
+  if(enableSerialMessages){
+  Serial.begin(9600);
+  Serial.print("Initializing SD card...");}
+  //xbee.begin(9600);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);   //dash LED
+  
+  pinMode(14, OUTPUT); //breaktemp LED
+  pinMode(15, OUTPUT); //
+  
+  pinMode(16, OUTPUT); 
+  pinMode(17, OUTPUT);
+  pinMode(18, OUTPUT); //shockpot LED
+  
+  digitalWrite(14, HIGH); // g off
+  digitalWrite(15, LOW); //y on
+  
+  digitalWrite(16, HIGH); //r off
+  digitalWrite(17, LOW); // g on
+  digitalWrite(18, HIGH); //y off
+
+  
+  pinMode(24, OUTPUT);
+  pinMode(25, OUTPUT); 
+  pinMode(26, OUTPUT); //intake pressure LED
+
+  digitalWrite(24, LOW); // g on
+  digitalWrite(25, HIGH); //y off
+  digitalWrite(26, HIGH); //r off
+
+  pinMode(27, OUTPUT); 
+  pinMode(28, OUTPUT); //intake temperature LED
+
+  digitalWrite(27, LOW); //y on
+  digitalWrite(28, HIGH); //r off
+
+  pinMode(30, OUTPUT);
+  pinMode(31, OUTPUT);
+  pinMode(32, OUTPUT); // coolant temperature
+
+  digitalWrite(30, HIGH); //r on
+  digitalWrite(31, LOW); //g off
+  digitalWrite(32, LOW); //y off
+
+  digitalWrite(4, LOW); //r on
+  digitalWrite(5, HIGH); //g off
+  digitalWrite(6, HIGH); //y off
+  
   can_setup();
+  
+  digitalWrite(4, HIGH); //r off
+  digitalWrite(5, HIGH); //g off
+  digitalWrite(6, LOW); //y on
+  
+  
+  pinMode(led_r, OUTPUT);
+  pinMode(led_g, OUTPUT);
+  pinMode(led_y, OUTPUT);
+  
+  if(enableSerialMessages){Serial.print("CAN setup complete");}
   pinMode(CSpin, OUTPUT);
   //
 
@@ -152,16 +237,17 @@ void setup() {
   pinMode(led_g, OUTPUT);
   pinMode(led_y, OUTPUT);
 
+  
   // see if the card is present and can be initialized
   if (!SD.begin(CSpin)) {
-  Sprintln("Card failed/not found");
+  if(enableSerialMessages){Serial.println("Card failed/not found");}
   digitalWrite(led_r, LOW);
   digitalWrite(led_y, HIGH);
   digitalWrite(led_g, HIGH);
   // stop
   return;
   }
-  Sprintln("card initialized.");
+  if(enableSerialMessages){Serial.println("card initialized.");}
 
   pinMode(FL_VSS_PIN, INPUT);
   pinMode(FR_VSS_PIN, INPUT);
@@ -172,7 +258,7 @@ void setup() {
   if (sensorDataVer) {
         dataVer = sensorDataVer.read();
   } else {
-     Sprintln("File unavailable");
+    if(enableSerialMessages){Serial.println("File unavailable");}
     digitalWrite(led_r, LOW);
     digitalWrite(led_y, LOW);
     digitalWrite(led_g, HIGH);
@@ -189,8 +275,9 @@ void setup() {
   if (sensorData){
       sensorData.println("FL_VSS,FR_VSS,BL_VSS,BR_VSS,FL_BRK_TMP,FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP,FL_SUS_POT,FR_SUS_POT,BL_SUS_POT,BR_SUS_POT,F_BRK_PRES,B_BRK_PRES,STEER_ANG,TPS,OIL_PRES,OIL_TEMP,COOL_TEMP,MAP,MAT,NEUT,LAMBDA1,LAMBDA2,ACCEL,GYRO,GPS,STRAIN1,STRAIN2,STRAIN3,STRAIN4,PTUBE1,PTUBE2,PTUBE3,PTUBE4,PTUBE5,PTUBE6,PTUBE7,PTUBE8,PTUBE9,PTUBE10,PTUBE11,PTUBE12");
       sensorData.close(); // close the file
+      if(enableSerialMessages){Serial.println("First line of file written");}
     } else {
-    Sprintln("Error writing to file !");
+    if(enableSerialMessages){Serial.println("Error writing to file !");}
     digitalWrite(led_r, LOW);
     digitalWrite(led_y, LOW);
     digitalWrite(led_g, HIGH);
@@ -212,23 +299,36 @@ void setup() {
   STRAIN4_CLB = convertSensor(ads1115c.readADC_Differential_2_3());
   PTUBE_CLB = convertSensor(analogRead(PTUBE1_PIN));
   digitalWrite(led_r, HIGH);
-  digitalWrite(led_y, HIGH);
-  digitalWrite(led_g, LOW);
-}
 
+  if(enableSerialMessages){Serial.print("Setup complete");}
+}
 
 void loop() {
   currentTime = millis();
 
 //  run checks for digital sensors every single loop, check for reading of 0
   fakeDigitalSensors();
+
 //  check for analog reading every second
 //  frequency of change of data
   if (currentTime - previousTimeAnalog > readFrequency){
     previousTimeAnalog = currentTime;
+
     compileCurData();
+    digitalWrite(14, LOW); // r on
+    digitalWrite(15, HIGH);
+    digitalWrite(16, HIGH);
     saveData();
+    digitalWrite(15, LOW); //g on
+    digitalWrite(14, HIGH);
+    digitalWrite(16, HIGH);
+
     // for now write to xbee every second, may shorten interval
     writeXbee();
+    digitalWrite(16, LOW); //y on
+    digitalWrite(14, HIGH);
+    digitalWrite(15, HIGH);
+    
   }
+ 
 }
