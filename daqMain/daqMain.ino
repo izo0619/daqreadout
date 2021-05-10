@@ -223,6 +223,12 @@ void setup() {
   if (imuStatus < 0) {
     digitalWrite(lambdas_r, LOW);
   }
+
+  //Set IMU accelerometer range to +-4G
+  IMU.setAccelRange(MPU9250::ACCEL_RANGE_4G);
+
+  //Set IMU gyroscope range
+  //IMU.setGyroRange(MPU9250::GYRO_RANGE_500DPS);
   
   // see if the card is present and can be initialized
   if (!SD.begin(CSpin)) {
