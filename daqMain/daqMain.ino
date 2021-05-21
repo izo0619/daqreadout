@@ -108,7 +108,7 @@ const int CSpin = 49;
 String dataString =""; // holds the data to be written to the SD card
 String fileName;
 File sensorData;
-int readFrequency = 1000; // CHANGE THIS TO READ FASTER/SLOWER (units in ms)
+int readFrequency = 100; // CHANGE THIS TO READ FASTER/SLOWER (units in ms)
 
 //Debug and testing
 bool enableSerialMessages = false;
@@ -191,8 +191,10 @@ void setup() {
   // Open serial communications
   if(enableSerialMessages){
   Serial.begin(9600);
-  Serial.print("Initializing SD card...");}
-  //xbee.begin(9600);
+  Serial.print("Initializing SD card...");
+  } else {
+  xbee.begin(9600);
+  }
   
   for (int i = 4; i <= 15; i++) {
     pinMode(i, OUTPUT);
