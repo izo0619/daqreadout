@@ -4,19 +4,32 @@ void writeXbee(){
   digitalWrite(31, LOW); //g on
   digitalWrite(32, HIGH); //y off
   // excluding strain gauges and pitot tubes
-  const int len = 27;
+  const int len = 53; // 49 + 4 for non sensor values
   // significant digits of each sensor values, temporary
-  int sensorSig[len] = {1, 1, 1, 1, 1, 1, 1, 1,
+  // used later if different sig 
+  /*sensorSig {1, 1, 1, 1, 1, 1, 1, 1,
                         1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1}; 
+                      1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1}*/
+                         
   short shortSensorData[len];
   short id = -32767;
 
   // assumes the first 36 elements matches the python side of sensors
   for (int i= 0; i < len; i++){
     // does not round yet
-    shortSensorData[i] = short(allSensors[i] * pow(10,sensorSig[i])); // may not need to use a list
+    
+    // skip strain and ptubes
+    float temp;
+    if(i > 26 && i < 43){
+      continue;
+    }else if(i > 49){
+      temp = 0;
+    }else{
+      temp = allSensors[i];
+    }
+    // pow 1 for now, use sensorSig if needed
+    shortSensorData[i] = short(temp * pow(10,1)); // may not need to use a list
     xbee.write(highByte(shortSensorData[i]));
     xbee.write(lowByte(shortSensorData[i]));
     digitalWrite(30, HIGH); //r off
