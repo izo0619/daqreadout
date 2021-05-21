@@ -223,6 +223,20 @@ void setup() {
   if (imuStatus < 0) {
     digitalWrite(lambdas_r, LOW);
   }
+
+  //Set IMU accelerometer range to +-4G
+  IMU.setAccelRange(MPU9250::ACCEL_RANGE_4G);
+
+  //Set IMU gyroscope range
+  //IMU.setGyroRange(MPU9250::GYRO_RANGE_500DPS);
+
+  //Set IMU digital low pass filter bandwith (can be 5, 10, 20, 41, 92, or 184 Hz
+  //defaults to no filtering
+  //IMU.setDlpfBandwidth(MPU9250::DLPF_BANDWIDTH_20HZ);
+
+  //Set IMU refresh rate (probably defaults to 32kHz for gyro and temp, 4kHz for accel, 100Hz (cannot be changed) for magnetometer)
+  //Refresh rate for gyro, temp, and accel = 1000/(1+SRD)
+  //IMU.setSrd(19); //50Hz
   
   // see if the card is present and can be initialized
   if (!SD.begin(CSpin)) {
