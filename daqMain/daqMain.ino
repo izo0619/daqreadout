@@ -136,30 +136,30 @@ float FL_VSS, FR_VSS, BL_VSS, BR_VSS;
 // Brake Temperature
 int FL_BRK_TMP_PIN = A0;
 int FR_BRK_TMP_PIN = A1;
-float FL_BRK_TMP, FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP;
+//float FL_BRK_TMP, FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP;
 
 // Suspension Potentiometer
 int FL_SUS_POT_PIN = A2;
 int FR_SUS_POT_PIN = A3;
-float FL_SUS_POT, FR_SUS_POT, BL_SUS_POT, BR_SUS_POT;
+//float FL_SUS_POT, FR_SUS_POT, BL_SUS_POT, BR_SUS_POT;
 
 // Brake Pressure
 int F_BRK_PRES_PIN = A4;
-float F_BRK_PRES = 0;
-float B_BRK_PRES = 0;
+//float F_BRK_PRES = 0;
+//float B_BRK_PRES = 0;
 
 // Steer Angle
 int STEER_ANG_PIN = A5;
-float STEER_ANG = 0;
+//float STEER_ANG = 0;
 
 // Rest of Motec Reads
-float TPS, OIL_PRES,OIL_TEMP,COOL_TEMP, MAP, MAT, NEUT, LAMBDA1, LAMBDA2;
+//float TPS, OIL_PRES,OIL_TEMP,COOL_TEMP, MAP, MAT, NEUT, LAMBDA1, LAMBDA2;
 
 //  Rest of ADC reads
-float ACCEL = 0;
-float GYRO = 0;
-float GPS = 0;
-float STRAIN1, STRAIN2, STRAIN3, STRAIN4;
+//float ACCEL = 0;
+//float GYRO = 0;
+//float GPS = 0;
+//float STRAIN1, STRAIN2, STRAIN3, STRAIN4;
 
 // PTUBES
 int PTUBE1_PIN = A6;
@@ -172,7 +172,7 @@ int PTUBE7_PIN = A12;
 int PTUBE8_PIN = A13;
 int PTUBE9_PIN = A14;
 int PTUBE10_PIN = A15;
-float PTUBE1, PTUBE2, PTUBE3, PTUBE4, PTUBE5, PTUBE6, PTUBE7, PTUBE8, PTUBE9, PTUBE10, PTUBE11, PTUBE12;
+//float PTUBE1, PTUBE2, PTUBE3, PTUBE4, PTUBE5, PTUBE6, PTUBE7, PTUBE8, PTUBE9, PTUBE10, PTUBE11, PTUBE12;
 
 
 // OFFSETS
