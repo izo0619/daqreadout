@@ -21,7 +21,7 @@ void writeXbee(){
     
     // skip strain and ptubes
     float temp;
-    if(i > 26 && i < 43){
+    if((i > 26 && i < 43) || i == 49){
       continue;
     }else if(i > 49){
       temp = 0;

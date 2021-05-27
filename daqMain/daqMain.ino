@@ -190,6 +190,7 @@ float convertSensor(int sensorValue, int calibration=0){
 float dimensionalizeStrainGuage(float raw, float offset = 0);
 float dimensionalizeAdsADC(float raw, float offset = 0);
 float dimensionalizeMegaADC(float raw, float offset = 0);
+float dimensionalizeBrakeTemp(float raw, float offset = 0);
 
 
 void setup() {
@@ -325,8 +326,10 @@ void loop() {
 //  run checks for digital sensors every single loop, check for reading of 0
 
   digitalSensors();
-
- 
+  
+ if (can_ready()) {
+  can_getvalue();
+ }
   
 //  check for analog reading every second
 //  frequency of change of data

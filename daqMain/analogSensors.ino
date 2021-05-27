@@ -3,8 +3,8 @@ void analogSensors(){
   digitalWrite(27, LOW); // y on
   digitalWrite(28, HIGH); //g off
   
-  allSensors[4] = (dimensionalizeMegaADC(analogRead(FL_BRK_TMP_PIN)) - 0.50)/0.005;
-  allSensors[5] = (dimensionalizeMegaADC(analogRead(FR_BRK_TMP_PIN)) - 0.50)/0.005;
+  allSensors[4] = (dimensionalizeBrakeTemp(analogRead(FL_BRK_TMP_PIN)) - 0.50)/0.005;
+  allSensors[5] = (dimensionalizeBrakeTemp(analogRead(FR_BRK_TMP_PIN)) - 0.50)/0.005;
   allSensors[6] = can_read(4); // back l brake temp
   allSensors[7] = can_read(5); // back r brake temp
   allSensors[8] = dimensionalizeMegaADC(analogRead(FL_SUS_POT_PIN), FL_SUS_POT_CLB);
