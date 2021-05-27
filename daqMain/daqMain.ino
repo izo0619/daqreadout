@@ -121,12 +121,12 @@ unsigned long FL_VSS_LastRead,FR_VSS_LastRead, BL_VSS_LastRead, BR_VSS_LastRead,
 // SENSOR ARRAYS
 float allSensors[50];
 
-// SENSOR GLOBALS
+/*// SENSOR GLOBALS
 int sensorVoltage = 0;
 int systemVoltage = 5;
-int resolution = 1024;
+int resolution = 1024;*/
 
-// Wheel Speed
+// Wheel Speed (should use interrupts if possible so that we don't miss pulses)
 int wheelCirc = 3.24*2*8;
 int wheelSpeed = 0;
 int FL_VSS_PIN = 2;
@@ -136,30 +136,30 @@ float FL_VSS, FR_VSS, BL_VSS, BR_VSS;
 // Brake Temperature
 int FL_BRK_TMP_PIN = A0;
 int FR_BRK_TMP_PIN = A1;
-float FL_BRK_TMP, FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP;
+//float FL_BRK_TMP, FR_BRK_TMP,BL_BRK_TMP,BR_BRK_TMP;
 
 // Suspension Potentiometer
 int FL_SUS_POT_PIN = A2;
 int FR_SUS_POT_PIN = A3;
-float FL_SUS_POT, FR_SUS_POT, BL_SUS_POT, BR_SUS_POT;
+//float FL_SUS_POT, FR_SUS_POT, BL_SUS_POT, BR_SUS_POT;
 
 // Brake Pressure
 int F_BRK_PRES_PIN = A4;
-float F_BRK_PRES = 0;
-float B_BRK_PRES = 0;
+//float F_BRK_PRES = 0;
+//float B_BRK_PRES = 0;
 
 // Steer Angle
 int STEER_ANG_PIN = A5;
-float STEER_ANG = 0;
+//float STEER_ANG = 0;
 
 // Rest of Motec Reads
-float TPS, OIL_PRES,OIL_TEMP,COOL_TEMP, MAP, MAT, NEUT, LAMBDA1, LAMBDA2;
+//float TPS, OIL_PRES,OIL_TEMP,COOL_TEMP, MAP, MAT, NEUT, LAMBDA1, LAMBDA2;
 
 //  Rest of ADC reads
-float ACCEL = 0;
-float GYRO = 0;
-float GPS = 0;
-float STRAIN1, STRAIN2, STRAIN3, STRAIN4;
+//float ACCEL = 0;
+//float GYRO = 0;
+//float GPS = 0;
+//float STRAIN1, STRAIN2, STRAIN3, STRAIN4;
 
 // PTUBES
 int PTUBE1_PIN = A6;
@@ -172,19 +172,24 @@ int PTUBE7_PIN = A12;
 int PTUBE8_PIN = A13;
 int PTUBE9_PIN = A14;
 int PTUBE10_PIN = A15;
-float PTUBE1, PTUBE2, PTUBE3, PTUBE4, PTUBE5, PTUBE6, PTUBE7, PTUBE8, PTUBE9, PTUBE10, PTUBE11, PTUBE12;
+//float PTUBE1, PTUBE2, PTUBE3, PTUBE4, PTUBE5, PTUBE6, PTUBE7, PTUBE8, PTUBE9, PTUBE10, PTUBE11, PTUBE12;
 
 
 // OFFSETS
 float PTUBE_CLB, STRAIN1_CLB, STRAIN2_CLB, STRAIN3_CLB, STRAIN4_CLB, STEER_ANG_CLB, TPS_CLB, F_BRK_PRES_CLB, B_BRK_PRES_CLB, FL_SUS_POT_CLB, FR_SUS_POT_CLB, BL_SUS_POT_CLB, BR_SUS_POT_CLB;
 
 
-float convertSensor(int sensorValue, int calibration=0);
+/*float convertSensor(int sensorValue, int calibration=0);
 // sensor value from 0 to 2^16 and returns a voltage between 0 and 5 V
 float convertSensor(int sensorValue, int calibration=0){
   float sensorVoltage = (sensorValue * ((float)systemVoltage/resolution)) - calibration;
   return sensorVoltage;
-}
+}*/ //moved to dimensionalizeSensors
+
+//Function prototypes from dimensionalizeSensors
+float dimensionalizeStrainGuage(float raw, float offset = 0);
+float dimensionalizeAdsADC(float raw, float offset = 0);
+float dimensionalizeMegaADC(float raw, float offset = 0);
 
 
 void setup() {
@@ -226,6 +231,8 @@ void setup() {
     digitalWrite(lambdas_r, LOW);
   }
 
+  //Set external sensor ranges
+
   //Set IMU accelerometer range to +-4G
   IMU.setAccelRange(MPU9250::ACCEL_RANGE_4G);
 
@@ -239,6 +246,13 @@ void setup() {
   //Set IMU refresh rate (probably defaults to 32kHz for gyro and temp, 4kHz for accel, 100Hz (cannot be changed) for magnetometer)
   //Refresh rate for gyro, temp, and accel = 1000/(1+SRD)
   //IMU.setSrd(19); //50Hz
+
+  //set external ADC for strain guages gain to max
+  ads1115b.setGain(GAIN_SIXTEEN);
+  ads1115c.setGain(GAIN_SIXTEEN);
+  
+  //Set other external ADC gain to min
+  ads1115a.setGain(GAIN_TWOTHIRDS);
   
   // see if the card is present and can be initialized
   if (!SD.begin(CSpin)) {
@@ -287,19 +301,19 @@ void setup() {
   }
 
   // set calibration variables ** these are in voltage
-  FL_SUS_POT_CLB = convertSensor(analogRead(FL_SUS_POT_PIN));
-  FR_SUS_POT_CLB = convertSensor(analogRead(FR_SUS_POT_PIN));
+  FL_SUS_POT_CLB = dimensionalizeMegaADC(analogRead(FL_SUS_POT_PIN));
+  FR_SUS_POT_CLB = dimensionalizeMegaADC(analogRead(FR_SUS_POT_PIN));
   //  BL_SUS_POT_CLB = back l suspot
   //  BR_SUS_POT_CLB = back r suspot
-  F_BRK_PRES_CLB = convertSensor(analogRead(F_BRK_PRES_PIN));
+  F_BRK_PRES_CLB = dimensionalizeMegaADC(analogRead(F_BRK_PRES_PIN));
   //  B_BRK_PRES_CLB = back brk pres
-  STEER_ANG_CLB = convertSensor(analogRead(STEER_ANG_PIN));
+  STEER_ANG_CLB = dimensionalizeMegaADC(analogRead(STEER_ANG_PIN));
   //  TPS_CLB = TPS
-  STRAIN1_CLB = convertSensor(ads1115b.readADC_Differential_0_1());
-  STRAIN2_CLB = convertSensor(ads1115b.readADC_Differential_2_3());
-  STRAIN3_CLB = convertSensor(ads1115c.readADC_Differential_0_1());
-  STRAIN4_CLB = convertSensor(ads1115c.readADC_Differential_2_3());
-  PTUBE_CLB = convertSensor(analogRead(PTUBE1_PIN));
+  STRAIN1_CLB = dimensionalizeStrainGuage(ads1115b.readADC_Differential_0_1());
+  STRAIN2_CLB = dimensionalizeStrainGuage(ads1115b.readADC_Differential_2_3());
+  STRAIN3_CLB = dimensionalizeStrainGuage(ads1115c.readADC_Differential_0_1());
+  STRAIN4_CLB = dimensionalizeStrainGuage(ads1115c.readADC_Differential_2_3());
+  PTUBE_CLB = dimensionalizeMegaADC(analogRead(PTUBE1_PIN));
   digitalWrite(spare1_r, HIGH);
 
   if(enableSerialMessages){Serial.print("Setup complete");}
