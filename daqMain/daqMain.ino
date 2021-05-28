@@ -327,9 +327,9 @@ void loop() {
 
   digitalSensors();
   
- if (can_ready()) {
+ /*if (can_ready()) {
   can_getvalue();
- }
+ }*/
   
 //  check for analog reading every second
 //  frequency of change of data

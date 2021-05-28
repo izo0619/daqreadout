@@ -17,7 +17,7 @@ float dimensionalizeAdsADC(float raw, float offset = 0) {
 }
 
 float dimensionalizeMegaADC(float raw, float offset = 0) {
-  return (raw + megaADCMultiplier) + offset; //units: mv
+  return (raw * megaADCMultiplier) + offset; //units: mv
 }
 
 float dimensionalizeBrakeTemp(float raw, float offset = 0) {
