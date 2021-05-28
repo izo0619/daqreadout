@@ -5,6 +5,10 @@
 #define megaADCMultiplier 4.9F
 #define brakeTempMultiplier 200
 #define brakeTempOffsetV 0.5
+#define steeringAngleMinV 0.5
+#define steeringAngleMaxV 4.5
+#define steeringAngleMin 0
+#define steeringAngleMax 180
 
 //#define wheelCirc 3.24*2*8
 
@@ -21,5 +25,9 @@ float dimensionalizeMegaADC(float raw, float offset = 0) {
 }
 
 float dimensionalizeBrakeTemp(float raw, float offset = 0) {
-  return ((dimensionalizeMegaADC(raw) - brakeTempOffsetV) * brakeTempMultiplier); //units: C
+  return ((dimensionalizeMegaADC(raw)/1000 - brakeTempOffsetV) * brakeTempMultiplier); //units: C
+}
+
+float dimensionalizeSteeringAngle(float raw, float offset = 0) {
+  return map(dimensionalizeMegaADC(raw)/1000, steeringAngleMinV, steeringAngleMaxV, steeringAngleMin, steeringAngleMax); //units: deg
 }

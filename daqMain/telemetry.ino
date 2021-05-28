@@ -4,7 +4,7 @@ void writeXbee(){
   digitalWrite(31, LOW); //g on
   digitalWrite(32, HIGH); //y off
   // excluding strain gauges and pitot tubes
-  const int len = 53; // 49 + 4 for non sensor values
+  const int len = 54; // 50 + 4 for non sensor values
   // significant digits of each sensor values, temporary
   // used later if different sig 
   /*sensorSig {1, 1, 1, 1, 1, 1, 1, 1,
@@ -28,6 +28,7 @@ void writeXbee(){
     }else{
       temp = allSensors[i];
     }
+    
     // pow 1 for now, use sensorSig if needed
     shortSensorData[i] = short(temp * pow(10,1)); // may not need to use a list
     xbee.write(highByte(shortSensorData[i]));
