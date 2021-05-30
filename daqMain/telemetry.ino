@@ -23,8 +23,8 @@ void writeXbee(){
     float temp;
     if((i > 26 && i < 43) || i == 49){
       continue;
-    }else if(i > 49){
-      temp = 0;
+    //}else if(i > 49){
+      //temp = 0;
     }else{
       temp = allSensors[i];
     }

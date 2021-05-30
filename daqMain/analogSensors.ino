@@ -56,4 +56,5 @@ void analogSensors(){
   allSensors[47] = IMU.getMagY_uT();
   allSensors[48] = IMU.getMagZ_uT();
   allSensors[49] = IMU.getTemperature_C();
+  allSensors[51] = can_read(50);
 }

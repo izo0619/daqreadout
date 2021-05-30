@@ -327,7 +327,9 @@ void loop() {
 //  run checks for digital sensors every single loop, check for reading of 0
 
   digitalSensors();
-  
+  if (can_ready()) {
+    can_getvalue();
+  }
  /*if (can_ready()) {
   can_getvalue();
  }*/
