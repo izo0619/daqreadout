@@ -239,7 +239,7 @@ void setup() {
   IMU.setAccelRange(MPU9250::ACCEL_RANGE_4G);
 
   //Set IMU gyroscope range
-  //IMU.setGyroRange(MPU9250::GYRO_RANGE_500DPS);
+  IMU.setGyroRange(MPU9250::GYRO_RANGE_500DPS);
 
   //Set IMU digital low pass filter bandwith (can be 5, 10, 20, 41, 92, or 184 Hz
   //defaults to no filtering
