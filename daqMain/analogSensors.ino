@@ -27,9 +27,9 @@ void analogSensors(){
 
   // imu
   IMU.readSensor();
-  allSensors[24] = IMU.getAccelX_mss();
-  allSensors[25] = IMU.getAccelY_mss();
-  allSensors[26] = IMU.getAccelZ_mss();
+  allSensors[24] = IMU.getAccelX_mss()/9.81;
+  allSensors[25] = IMU.getAccelY_mss()/9.81;
+  allSensors[26] = IMU.getAccelZ_mss()/9.81;
 
   // strain gauges
   allSensors[27] = dimensionalizeStrainGuage(ads1115b.readADC_Differential_0_1(), STRAIN1_CLB);
