@@ -192,6 +192,7 @@ float dimensionalizeAdsADC(float raw, float offset = 0);
 float dimensionalizeMegaADC(float raw, float offset = 0);
 float dimensionalizeBrakeTemp(float raw, float offset = 0);
 float dimensionalizeSteeringAngle(float raw, float offset = 0);
+float dimensionalizeBrakePress(float raw, float offset = 0);
 
 
 void setup() {

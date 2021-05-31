@@ -13,19 +13,23 @@
 //#define wheelCirc 3.24*2*8
 
 float dimensionalizeStrainGuage(float raw, float offset = 0) {
-  return ((1000 * 4 * raw * adsStrainMultiplier) / (strainGF * systemVoltage)) + offset; //units: microstrain
+  return ((1000 * 4 * raw * adsStrainMultiplier) / (strainGF * systemVoltage)) - offset; //units: microstrain
 }
 
 float dimensionalizeAdsADC(float raw, float offset = 0) {
-  return (raw * adsADCMultiplier) + offset; //units: mv
+  return (raw * adsADCMultiplier) - offset; //units: mv
 }
 
 float dimensionalizeMegaADC(float raw, float offset = 0) {
-  return (raw * megaADCMultiplier) + offset; //units: mv
+  return (raw * megaADCMultiplier) - offset; //units: mv
 }
 
 float dimensionalizeBrakeTemp(float raw, float offset = 0) {
   return ((dimensionalizeMegaADC(raw)/1000 - brakeTempOffsetV) * brakeTempMultiplier); //units: C
+}
+
+float dimensionalizeBrakePress(float raw, float offset = 0) {
+  return map(dimensionalizeMegaADC(raw)/1000, 0.5, 4.5, 0, 1000); //units: PSI
 }
 
 float dimensionalizeSteeringAngle(float raw, float offset = 0) {

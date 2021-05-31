@@ -11,7 +11,7 @@ void analogSensors(){
   allSensors[9] = dimensionalizeMegaADC(analogRead(FR_SUS_POT_PIN), FR_SUS_POT_CLB);
   //  allSensors[10] = back l suspot
   //  allSensors[11] = back r suspot
-  allSensors[12] = dimensionalizeMegaADC(analogRead(F_BRK_PRES_PIN), F_BRK_PRES_CLB);
+  allSensors[12] = dimensionalizeBrakePress(analogRead(F_BRK_PRES_PIN), F_BRK_PRES_CLB);
   allSensors[13] = can_read(1); // back brk pres
   allSensors[14] = dimensionalizeSteeringAngle(analogRead(STEER_ANG_PIN), STEER_ANG_CLB);
   // motec
