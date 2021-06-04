@@ -5,25 +5,25 @@ void analogSensors(){
   
   allSensors[4] = dimensionalizeBrakeTemp(analogRead(FL_BRK_TMP_PIN));
   allSensors[5] = dimensionalizeBrakeTemp(analogRead(FR_BRK_TMP_PIN));
-  allSensors[6] = can_read(4); // back l brake temp
-  allSensors[7] = can_read(5); // back r brake temp
+  allSensors[6] = can_read(ADDR_BRAKE_TEMP_REAR_LEFT); // back l brake temp
+  allSensors[7] = can_read(ADDR_BRAKE_TEMP_REAR_RIGHT); // back r brake temp
   allSensors[8] = dimensionalizeMegaADC(analogRead(FL_SUS_POT_PIN), FL_SUS_POT_CLB);
   allSensors[9] = dimensionalizeMegaADC(analogRead(FR_SUS_POT_PIN), FR_SUS_POT_CLB);
   //  allSensors[10] = back l suspot
   //  allSensors[11] = back r suspot
   allSensors[12] = dimensionalizeBrakePress(analogRead(F_BRK_PRES_PIN), F_BRK_PRES_CLB);
-  allSensors[13] = can_read(1); // back brk pres
+  allSensors[13] = can_read(ADDR_BRAKE_PRESSURE_FRONT); // back brk pres
   allSensors[14] = dimensionalizeSteeringAngle(analogRead(STEER_ANG_PIN), STEER_ANG_CLB);
   // motec
-  allSensors[15] = can_read(31); // TPS
-  allSensors[16] = can_read(20); // OIL_PRES
-  allSensors[17] = can_read(21); // OIL_TEMP
-  allSensors[18] = can_read(53); // COOL_TEMP
-  allSensors[19] = can_read(51); // MAP
-  allSensors[20] = can_read(52); // MAT
-  allSensors[21] = can_read(30); // NEUT
-  allSensors[22] = can_read(40); // LAMBDA1
-  allSensors[23] = can_read(41); // LAMBDA2
+  allSensors[15] = can_read(ADDR_THROTTLE_POSITION); // TPS
+  allSensors[16] = can_read(ADDR_OIL_PRESSURE); // OIL_PRES
+  allSensors[17] = can_read(ADDR_ENGINE_OIL_TEMP); // OIL_TEMP
+  allSensors[18] = can_read(ADDR_COOLANT_TEMP); // COOL_TEMP
+  allSensors[19] = can_read(ADDR_MANIFOLD_AIR_PRESSURE); // MAP
+  allSensors[20] = can_read(ADDR_MANIFOLD_AIR_TEMP); // MAT
+  allSensors[21] = can_read(ADDR_NEUTRAL_GEAR_SWITCH); // NEUT
+  allSensors[22] = can_read(ADDR_LAMBDA1)/100; // LAMBDA1
+  allSensors[23] = can_read(ADDR_LAMBDA2)/100; // LAMBDA2
 
   // imu
   IMU.readSensor();
@@ -56,5 +56,6 @@ void analogSensors(){
   allSensors[47] = IMU.getMagY_uT();
   allSensors[48] = IMU.getMagZ_uT();
   allSensors[49] = IMU.getTemperature_C();
-  allSensors[51] = can_read(50);
+  allSensors[50] = ((float)can_read(ADDR_BAT_V))/10;
+  allSensors[51] = can_read(ADDR_ENGINE_SPEED);
 }
