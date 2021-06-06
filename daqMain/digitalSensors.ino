@@ -34,6 +34,6 @@ void digitalSensors(){
       allSensors[3] = wheelSpeed;
       BR_VSS_LastRead = currentTime;
   }*/
-  allSensors[2] = can_read(ADDR_WHEEL_SPEED_REAR_LEFT)*0.0621;
-  allSensors[3] = can_read(ADDR_WHEEL_SPEED_REAR_RIGHT)*0.0621;
+  allSensors[2] = can_read(ADDR_WHEEL_SPEED_REAR_LEFT);
+  allSensors[3] = can_read(ADDR_WHEEL_SPEED_REAR_RIGHT);
 }

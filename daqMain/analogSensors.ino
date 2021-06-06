@@ -22,8 +22,8 @@ void analogSensors(){
   allSensors[19] = can_read(ADDR_MANIFOLD_AIR_PRESSURE); // MAP
   allSensors[20] = can_read(ADDR_MANIFOLD_AIR_TEMP); // MAT
   allSensors[21] = can_read(ADDR_NEUTRAL_GEAR_SWITCH); // NEUT
-  allSensors[22] = can_read(ADDR_LAMBDA1)/100; // LAMBDA1
-  allSensors[23] = can_read(ADDR_LAMBDA2)/100; // LAMBDA2
+  allSensors[22] = can_read(ADDR_LAMBDA1); // LAMBDA1
+  allSensors[23] = can_read(ADDR_LAMBDA2); // LAMBDA2
 
   // imu
   IMU.readSensor();
@@ -56,6 +56,6 @@ void analogSensors(){
   allSensors[47] = IMU.getMagY_uT();
   allSensors[48] = IMU.getMagZ_uT();
   allSensors[49] = IMU.getTemperature_C();
-  allSensors[50] = ((float)can_read(ADDR_BAT_V))/10;
+  allSensors[50] = can_read(ADDR_BAT_V);
   allSensors[51] = can_read(ADDR_ENGINE_SPEED);
 }
