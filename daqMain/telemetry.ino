@@ -33,9 +33,9 @@ void writeXbee(){
     shortSensorData[i] = short(temp * pow(10,1)); // may not need to use a list
     xbee.write(highByte(shortSensorData[i]));
     xbee.write(lowByte(shortSensorData[i]));
-    digitalWrite(30, HIGH); //r off
-    digitalWrite(31, HIGH); //g off
-    digitalWrite(32, LOW); //y on
+    digitalWrite(coolanttemp_r, HIGH); //r off
+    digitalWrite(coolanttemp_g, HIGH); //g off
+    digitalWrite(coolanttemp_y, LOW); //y on
   }
   xbee.write(highByte(id));
   xbee.write(lowByte(id));
