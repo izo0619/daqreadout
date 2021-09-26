@@ -21,6 +21,7 @@ void digitalSensors(){
       FR_VSS_LastRead = currentTime;
   }
   // REPEAT WITH BACK WHEEL SPEEDS FROM MOTEC
+  /*
   if (BL_VSS == 0){
       diff = currentTime - BL_VSS_LastRead;
       wheelSpeed = wheelCirc/diff;
@@ -32,5 +33,7 @@ void digitalSensors(){
       wheelSpeed = wheelCirc/diff;
       allSensors[3] = wheelSpeed;
       BR_VSS_LastRead = currentTime;
-  }
+  }*/
+  allSensors[2] = can_read(ADDR_WHEEL_SPEED_REAR_LEFT);
+  allSensors[3] = can_read(ADDR_WHEEL_SPEED_REAR_RIGHT);
 }
